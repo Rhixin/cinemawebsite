@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <h1>Sign Up</h1>
+    <form method="post">
+      {% csrf_token %}
+      <h2>Account Information</h2>
+      {{ signup_form.as_p }}
+
+      <h2>Profile Information</h2>
+      {{ profile_form.as_p }}
+
+      <button type="submit">Sign Up</button>
+    </form>
+
+    {% if account_form.errors %}
+    <div class="error">{{ account_form.errors }}</div>
+    {% endif %} {% if profile_form.errors %}
+    <div class="error">{{ profile_form.errors }}</div>
+    {% endif %}
+  </body>
+</html>
