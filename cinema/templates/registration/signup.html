@@ -4,24 +4,55 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <h1>Sign Up</h1>
-    <form method="post">
-      {% csrf_token %}
-      <h2>Account Information</h2>
-      {{ signup_form.as_p }}
+  <body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+      <h1 class="text-2xl font-bold text-center mb-6">Sign Up</h1>
+      <form method="post">
+        {% csrf_token %}
 
-      <h2>Profile Information</h2>
-      {{ profile_form.as_p }}
+        <h2 class="text-lg font-semibold mb-4">Account Information</h2>
+        {{ signup_form.username }}
+        <br />
+        {{ signup_form.password1 }} {{ signup_form.password2 }}
 
-      <button type="submit">Sign Up</button>
-    </form>
+        <h2 class="text-lg font-semibold mb-4">Profile Information</h2>
+        {{ profile_form.fname }} {{ profile_form.lname }}
+        <br />
+        {{ profile_form.birth_date }} {{ profile_form.address }}
 
-    {% if account_form.errors %}
-    <div class="error">{{ account_form.errors }}</div>
-    {% endif %} {% if profile_form.errors %}
-    <div class="error">{{ profile_form.errors }}</div>
-    {% endif %}
+        <button
+          type="submit"
+          class="w-full bg-blue-500 text-white font-bold py-2 rounded hover:bg-blue-600 transition duration-200 mt-5"
+        >
+          Sign Up
+        </button>
+      </form>
+
+      {% if signup_form.errors %}
+      <div class="text-red-500 mt-4">
+        {% for error in signup_form.errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %} {% if profile_form.errors %}
+      <div class="text-red-500 mt-4">
+        {% for error in profile_form.errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <p class="mt-4 text-center text-gray-600">
+        Already have an account?
+        <a href="{% url 'home' %}" class="text-blue-500 hover:underline"
+          >Log In</a
+        >
+      </p>
+    </div>
   </body>
 </html>

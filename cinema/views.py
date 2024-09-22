@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from .forms import AccountForm, ProfileForm, SignUpForm
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -16,7 +15,8 @@ def login_view(request):
 
             if account is not None:
                 login(request, account)
-                return redirect('home')  # Redirect to the home page
+                request.session['user_name'] = username
+                return redirect('home')  
             else:
                 form.add_error(None, 'Invalid username or password')
     else:
@@ -26,7 +26,9 @@ def login_view(request):
 
 @login_required
 def go_home(request):
-    return render(request, 'home.html')
+    user_name = request.session.get('user_name', None)
+    
+    return render(request, 'home.html', {'user_name': user_name})
 
 def authView(request):
     if request.method == 'POST':
@@ -34,17 +36,15 @@ def authView(request):
         profile_form = ProfileForm(request.POST)
 
         if signup_form.is_valid() and profile_form.is_valid():
-            # Save the Account
-            account = signup_form.save()  # This handles password hashing
-            # Save the Profile (link it to the account)
+            
+            account = signup_form.save() 
             profile = profile_form.save(commit=False)
-            profile.account = account  # Link the profile to the newly created account
+            profile.account = account 
             profile.save()
 
-            # Log the user in after sign up
             login(request, account)
 
-            return redirect('home')  # Redirect to the home page or wherever you need
+            return redirect('home')  
     else:
         signup_form = SignUpForm()
         profile_form = ProfileForm()
